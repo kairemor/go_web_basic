@@ -21,9 +21,16 @@ func (apiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", homeHandler)
+	// http.HandleFunc("/", homeHandler)
 
-	http.Handle("/api", apiHandler{})
+	// http.Handle("/api", apiHandler{})
 
-	http.ListenAndServe(":4000", nil)
+	mux := http.NewServeMux()
+
+	mux.Handle("/api", apiHandler{})
+	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello from User [%s %s]", r.URL, r.Method)
+	})
+
+	http.ListenAndServe(":4000", mux)
 }
