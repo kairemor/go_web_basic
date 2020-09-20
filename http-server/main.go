@@ -17,13 +17,13 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello from go server [%s]", r.URL)
 }
 
-func logger(fn http.HandlerFunc) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func withLogger(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-		fn(w, r)
+		next.ServeHTTP(w, r)
 		end := time.Since(start)
 		fmt.Printf("%s %s process in %s \n", r.Method, r.URL, end)
-	}
+	})
 }
 
 // http.Handler
@@ -46,8 +46,8 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/home", logger(homeHandler))
-	mux.Handle("/api", apiHandler{})
+	mux.Handle("/home", withLogger(http.HandlerFunc(homeHandler)))
+	mux.Handle("/api", withLogger(apiHandler{}))
 	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello from User [%s %s]", r.URL, r.Method)
 	})
