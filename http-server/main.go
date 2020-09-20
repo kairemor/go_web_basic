@@ -7,7 +7,9 @@ import (
 	"time"
 )
 
-type user struct {
+// User type
+type User struct {
+	ID    string `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
@@ -25,6 +27,10 @@ func withLogger(next http.Handler) http.Handler {
 		fmt.Printf("%s %s process in %s \n", r.Method, r.URL, end)
 	})
 }
+func userHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+}
 
 // http.Handler
 type apiHandler struct{}
@@ -34,7 +40,7 @@ func (apiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// toujours set le content type
 
 	w.Header().Set("Content-Type", "application/json")
-	u := user{Name: "Mor", Email: "Kairemor"}
+	u := User{ID: "1", Name: "Mor", Email: "Kairemor"}
 
 	json.NewEncoder(w).Encode(u)
 }
@@ -48,9 +54,7 @@ func main() {
 
 	mux.Handle("/home", withLogger(http.HandlerFunc(homeHandler)))
 	mux.Handle("/api", withLogger(apiHandler{}))
-	mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello from User [%s %s]", r.URL, r.Method)
-	})
+	mux.HandleFunc("/user", userHandler)
 
 	http.ListenAndServe(":4000", mux)
 }
