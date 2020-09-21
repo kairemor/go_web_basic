@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -21,6 +22,11 @@ func main() {
 			Password string `json:"password" yaml:"password"`
 		} `json:"user" yaml:"user"`
 	}
+	host := flag.String("host", "localhost", "The database host address")
+	port := flag.Int("port", 8000, "The database port")
+	flag.Parse()
+	fmt.Println(*host)
+	fmt.Println(*port)
 
 	var configjson Config
 	var configyaml Config
