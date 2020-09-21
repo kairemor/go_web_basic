@@ -58,10 +58,15 @@ func main() {
 
 	mux := mux.NewRouter()
 
+	userRouter := mux.PathPrefix("/users").Subrouter()
+
+	// userRouter.Schemes("https")
+	// userRouter.Host("localhost")
+	// userRouter.PathPrefix("/v1").HandleFunc(usersHandler)
 	mux.Handle("/home", withLogger(http.HandlerFunc(homeHandler)))
 	mux.Handle("/api", withLogger(apiHandler{}))
-	mux.HandleFunc("/users", usersHandler).Methods("GET")
-	mux.HandleFunc("/users/{id:[0-9]+}", userHandler).Methods("GET")
+	userRouter.HandleFunc("/", usersHandler).Methods("GET")
+	userRouter.HandleFunc("/{id:[0-9]+}", userHandler).Methods("GET")
 
 	http.ListenAndServe(":4000", mux)
 }
