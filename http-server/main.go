@@ -29,7 +29,7 @@ func withLogger(next http.Handler) http.Handler {
 }
 func userHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
+	json.NewEncoder(w).Encode(Users)
 }
 
 // http.Handler

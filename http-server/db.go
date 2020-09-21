@@ -11,7 +11,8 @@ import (
 var db *sql.DB
 var err error
 
-var users []User
+// Users liste db user
+var Users []User
 
 func init() {
 	fmt.Println("Go & DB [postgresql]")
@@ -36,7 +37,7 @@ func init() {
 
 		u := User{ID: id, Name: firstName, Email: email}
 
-		users = append(users, u)
+		Users = append(Users, u)
 
 		fmt.Printf("%s %s %s \n", id, firstName, email)
 	}
