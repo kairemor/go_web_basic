@@ -1,0 +1,6 @@
+[database] 
+host =  "kairemor.gq"
+port =  "7000"
+[User] 
+Login = "mamsoum"
+Password = "password"
